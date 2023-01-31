@@ -5,59 +5,49 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Realtime SearchBar</title>
 </head>
 <style>
     * {
         margin: 0;
         padding: 0;
         box-sizing: border-box;
-        color: white;
     }
 
     body {
-        background-color: #000;
+        background-color: black;
         width: 100%;
-        height: 100vh;
+        min-height: 100vh;
         display: flex;
+        flex-direction: column;
         justify-content: center;
         align-items: center;
     }
 
+    .container {
+        width: 100%;
+        max-width: 500px;
+        border: 1px solid white;
+        border-radius: 20px;
+        height: 500px;
+        overflow: hidden;
+    }
+
     .searchbar {
         width: 100%;
-        /* max-width: 500px; */
-        /* height: 50px; */
-        background-color: #fff;
+        background-color: white;
         border-radius: 50px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
         padding: 5px 20px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
     }
 
     .searchbar input {
         width: 100%;
-        height: 100%;
         border: none;
+        padding: 5px 10px;
+        font-size: 17px;
         outline: none;
-        background-color: transparent;
-        font-size: 1.2rem;
-        font-weight: 500;
-        color: #000;
     }
 
-
-    .container {
-        width: 100%;
-        max-width: 500px;
-        border: 1px solid #fff;
-        border-radius: 20px;
-        height: 500px;
-        /* overflow-y: scroll; */
-        overflow: hidden;
-    }
 
     .result {
         height: 100%;
@@ -66,37 +56,41 @@
 
     .card {
         display: flex;
+        color: white;
         font-family: 'Courier New', Courier, monospace;
         justify-content: space-between;
         align-items: center;
         padding: 10px;
-        border-bottom: 1px solid #fff;
+        border-bottom: 1px solid white;
         width: 100%;
     }
 
-    .card-body {
-        display: flex;
-    }
 
-    .card-body p {
-        margin: 0 10px;
-        font-size: 12px;
+    #nomatches {
+        color: white;
+        font-family: 'Courier New', Courier, monospace;
+        text-align: center;
+        margin: 100px;
+        /* display: none; */
     }
 </style>
+
 
 <body>
     <div class="container">
         <div class="searchbar">
             <input type="text" placeholder="Search" id="searchinput">
         </div>
-
         <div class="result">
+            <p id="nomatches">No Data Found</p>
             <!-- <div class="card">
                 <div class="card-header">
                     <h3>John Doe</h3>
+                    <h4>john123@gmail.com</h4>
                 </div>
+
                 <div class="card-body">
-                    <p>Age: 30</p>,
+                    <p>Age: 30</p>
                     <p>Location: New York</p>
                 </div>
             </div> -->
@@ -214,52 +208,77 @@
         },
 
     ]
-
-
     const search = document.querySelector('#searchinput');
-    const searchBtn = document.querySelector('.searchbar button');
-    const container = document.querySelector('.container');
     const result = document.querySelector('.result');
 
+
     const searchitem = () => {
-        console.log(search.value);
+        // console.log(search.value);
         let searchValue = '';
         let newdata = [];
+
         if (search.value.length > 0) {
             searchValue = search.value.toLowerCase();
+            // console.log(searchValue);
 
             newdata = data.filter((item) => {
+                // console.log(item.name.toLocaleLowerCase().includes(searchValue));
+
+
+                // if(item.name.toLocaleLowerCase().includes(searchValue)){
+                //     // console.log(item.name)
+                // }
+
+
                 return item.name.toLowerCase().includes(searchValue) || item.email.toLowerCase().includes(searchValue)
-                    || item.age.toLowerCase().includes(searchValue) || item.location.toLowerCase().includes(searchValue)
-                    ;
+                    || item.age.toLowerCase().includes(searchValue)
+                    || item.location.toLowerCase().includes(searchValue)
             })
+
+            // console.log(newdata);
+            showdata(newdata)
         }
 
-        console.log(newdata);
-        show(newdata);
     }
 
-    const show = (newdata) => {
+
+
+    const nomatches = document.querySelector('#nomatches');
+    const showdata = (newdata) => {
+        console.log(newdata);
         let html = "";
-        newdata.forEach((item) => {
-            html += `
+
+
+        if (newdata.length > 0) {
+            newdata.forEach((item) => {
+                html += `
             <div class="card">
                 <div class="card-header">
-                    <h4>${item.name}</h4>
-                <h4>${item.email}</h4>
-
+                    <h3>${item.name}</h3>
+                    <h4>${item.email}</h4>
                 </div>
+
                 <div class="card-body">
-                    <p>Age: ${item.age}</p>,
+                    <p>Age: ${item.age}</p>
                     <p>Location: ${item.location}</p>
                 </div>
             </div>
             `
-        })
-        result.innerHTML = html;
-    }
+            })
 
-    search.addEventListener('keyup', searchitem);
+            result.innerHTML = html;
+        }
+
+        else {
+
+            console.log('No Data Found');
+            result.innerHTML = `<p id="nomatches">No Data Found</p>`;
+
+         
+
+        }
+    }
+    search.addEventListener('keyup', searchitem)
 </script>
 
 </html>
